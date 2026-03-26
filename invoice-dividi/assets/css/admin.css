@@ -1,0 +1,127 @@
+/**
+ * Invoice Dividi – Admin Styles
+ *
+ * Styles for the settings page and WooCommerce order metabox.
+ *
+ * @package Invoice_Dividi
+ */
+
+/* ================================================================
+   Settings page wrapper
+   ================================================================ */
+.invoice-dividi-settings-wrap h1 {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.invoice-dividi-settings-wrap h1 .dashicons {
+	font-size: 28px;
+	width: 28px;
+	height: 28px;
+	color: #2271b1;
+}
+
+/* Section headings */
+.invoice-dividi-settings-wrap h2 {
+	border-bottom: 2px solid #2271b1;
+	padding-bottom: 6px;
+	color: #1d2327;
+}
+
+/* Form table row spacing */
+.invoice-dividi-settings-wrap .form-table th {
+	padding-top: 16px;
+	font-weight: 600;
+}
+
+/* ================================================================
+   Logo upload field
+   ================================================================ */
+.invoice-dividi-logo-field {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 8px;
+	max-width: 400px;
+}
+
+.invoice-dividi-logo-field img {
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	padding: 4px;
+	background: #fafafa;
+}
+
+.invoice-dividi-logo-field .button {
+	margin-right: 6px;
+}
+
+/* ================================================================
+   License notice at page bottom
+   ================================================================ */
+.invoice-dividi-license-notice {
+	font-size: 11px;
+	color: #888;
+	margin-top: 24px;
+}
+
+/* ================================================================
+   Order metabox
+   ================================================================ */
+.invoice-dividi-metabox {
+	font-size: 13px;
+}
+
+.invoice-dividi-metabox .invoice-dividi-info {
+	margin: 4px 0;
+	line-height: 1.6;
+}
+
+.invoice-dividi-metabox .invoice-dividi-info strong {
+	display: inline-block;
+	min-width: 90px;
+	color: #555;
+}
+
+.invoice-dividi-metabox .button {
+	width: 100%;
+	text-align: center;
+	margin-bottom: 6px;
+}
+
+.invoice-dividi-metabox .invoice-dividi-view-btn {
+	background-color: #2271b1;
+	border-color: #135e96;
+	color: #fff;
+}
+
+.invoice-dividi-metabox .invoice-dividi-view-btn:hover {
+	background-color: #135e96;
+}
+
+.invoice-dividi-metabox .invoice-dividi-regen-btn {
+	color: #888;
+	font-size: 11px;
+}
+
+.invoice-dividi-metabox .description {
+	font-size: 11px;
+	color: #888;
+	margin-top: 6px;
+}
+
+/* ================================================================
+   Order list column
+   ================================================================ */
+.column-invoice_dividi {
+	width: 48px;
+	text-align: center !important;
+}
+
+.column-invoice_dividi .dashicons {
+	font-size: 18px;
+	width: 18px;
+	height: 18px;
+	vertical-align: middle;
+}
