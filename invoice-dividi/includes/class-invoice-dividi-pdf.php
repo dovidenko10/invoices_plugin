@@ -235,30 +235,51 @@ class Invoice_Dividi_PDF {
 		$this->text_at( $ml, $y, strtoupper( __( 'Bill To', 'invoice-dividi' ) ) );
 		$y += 5;
 
-		$this->set_font( 'Helvetica-Bold', 9 );
-		$this->set_text_color( 30, 30, 30 );
-		if ( ! empty( $data['billing_name'] ) ) {
-			$this->text_at( $ml, $y, $data['billing_name'] );
-			$y += 5;
-		}
-		if ( ! empty( $data['billing_company'] ) ) {
-			$this->text_at( $ml, $y, $data['billing_company'] );
-			$y += 5;
-		}
+		if ( ! empty( $data['is_company_purchase'] ) ) {
+			// Company customer: show company name, VAT code, registration code.
+			$this->set_font( 'Helvetica-Bold', 9 );
+			$this->set_text_color( 30, 30, 30 );
+			if ( ! empty( $data['customer_company_name'] ) ) {
+				$this->text_at( $ml, $y, $data['customer_company_name'] );
+				$y += 5;
+			}
 
-		$this->set_font( 'Helvetica', 9 );
-		if ( ! empty( $data['billing_address'] ) ) {
-			foreach ( explode( "\n", $data['billing_address'] ) as $line ) {
-				$line = trim( $line );
-				if ( '' !== $line ) {
-					$this->text_at( $ml, $y, $line );
-					$y += 4.5;
+			$this->set_font( 'Helvetica', 9 );
+			if ( ! empty( $data['customer_vat_code'] ) ) {
+				$this->text_at( $ml, $y, __( 'VAT Code: ', 'invoice-dividi' ) . $data['customer_vat_code'] );
+				$y += 4.5;
+			}
+			if ( ! empty( $data['customer_reg_code'] ) ) {
+				$this->text_at( $ml, $y, __( 'Reg. Code: ', 'invoice-dividi' ) . $data['customer_reg_code'] );
+				$y += 4.5;
+			}
+		} else {
+			// Individual customer: show standard WooCommerce billing details.
+			$this->set_font( 'Helvetica-Bold', 9 );
+			$this->set_text_color( 30, 30, 30 );
+			if ( ! empty( $data['billing_name'] ) ) {
+				$this->text_at( $ml, $y, $data['billing_name'] );
+				$y += 5;
+			}
+			if ( ! empty( $data['billing_company'] ) ) {
+				$this->text_at( $ml, $y, $data['billing_company'] );
+				$y += 5;
+			}
+
+			$this->set_font( 'Helvetica', 9 );
+			if ( ! empty( $data['billing_address'] ) ) {
+				foreach ( explode( "\n", $data['billing_address'] ) as $line ) {
+					$line = trim( $line );
+					if ( '' !== $line ) {
+						$this->text_at( $ml, $y, $line );
+						$y += 4.5;
+					}
 				}
 			}
-		}
-		if ( ! empty( $data['billing_email'] ) ) {
-			$this->text_at( $ml, $y, $data['billing_email'] );
-			$y += 4.5;
+			if ( ! empty( $data['billing_email'] ) ) {
+				$this->text_at( $ml, $y, $data['billing_email'] );
+				$y += 4.5;
+			}
 		}
 
 		$y += 6;

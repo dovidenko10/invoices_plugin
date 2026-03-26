@@ -23,6 +23,12 @@ class Invoice_Dividi_Invoice {
 	const META_FILE_PATH = '_invoice_dividi_file_path';
 	const META_FILE_NAME = '_invoice_dividi_file_name';
 
+	// Company purchase meta keys (set at checkout).
+	const META_IS_COMPANY            = '_invoice_dividi_is_company';
+	const META_CUSTOMER_COMPANY_NAME = '_invoice_dividi_customer_company_name';
+	const META_CUSTOMER_VAT_CODE     = '_invoice_dividi_customer_vat_code';
+	const META_CUSTOMER_REG_CODE     = '_invoice_dividi_customer_reg_code';
+
 	// ----------------------------------------------------------------
 	// Factory / static helpers
 	// ----------------------------------------------------------------
@@ -208,6 +214,12 @@ class Invoice_Dividi_Invoice {
 
 		$total = round( $subtotal + $vat_amount, 2 );
 
+		// Company purchase data (set at checkout).
+		$is_company_purchase   = '1' === $order->get_meta( self::META_IS_COMPANY, true );
+		$customer_company_name = $is_company_purchase ? (string) $order->get_meta( self::META_CUSTOMER_COMPANY_NAME, true ) : '';
+		$customer_vat_code     = $is_company_purchase ? (string) $order->get_meta( self::META_CUSTOMER_VAT_CODE, true ) : '';
+		$customer_reg_code     = $is_company_purchase ? (string) $order->get_meta( self::META_CUSTOMER_REG_CODE, true ) : '';
+
 		return array(
 			// Invoice meta.
 			'invoice_number' => $invoice_number,
@@ -235,6 +247,12 @@ class Invoice_Dividi_Invoice {
 			'billing_company' => $order->get_billing_company(),
 			'billing_address' => self::format_billing_address( $order ),
 			'billing_email'   => $order->get_billing_email(),
+
+			// Company purchase data.
+			'is_company_purchase'   => $is_company_purchase,
+			'customer_company_name' => $customer_company_name,
+			'customer_vat_code'     => $customer_vat_code,
+			'customer_reg_code'     => $customer_reg_code,
 
 			// Line items & totals.
 			'items'    => $items,

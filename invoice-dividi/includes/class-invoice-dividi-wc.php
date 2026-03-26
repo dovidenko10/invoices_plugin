@@ -39,6 +39,152 @@ class Invoice_Dividi_WC {
 		add_filter( 'manage_edit-shop_order_columns', array( $this, 'add_invoice_column' ) ); // Legacy.
 		add_action( 'manage_woocommerce_page_wc-orders_custom_column', array( $this, 'render_invoice_column' ), 10, 2 );
 		add_action( 'manage_shop_order_posts_custom_column', array( $this, 'render_invoice_column_legacy' ), 10, 2 );
+
+		// Checkout: company purchase fields.
+		add_action( 'woocommerce_after_checkout_billing_form', array( $this, 'add_checkout_fields' ) );
+		add_action( 'woocommerce_checkout_process', array( $this, 'validate_checkout_fields' ) );
+		add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'save_checkout_fields' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_checkout_assets' ) );
+	}
+
+	// ----------------------------------------------------------------
+	// Checkout: company purchase fields
+	// ----------------------------------------------------------------
+
+	/**
+	 * Enqueue the checkout toggle script on the checkout page.
+	 */
+	public function enqueue_checkout_assets() {
+		if ( ! function_exists( 'is_checkout' ) || ! is_checkout() ) {
+			return;
+		}
+
+		wp_enqueue_script(
+			'invoice-dividi-checkout',
+			INVOICE_DIVIDI_URL . 'assets/js/checkout.js',
+			array(),
+			INVOICE_DIVIDI_VERSION,
+			true
+		);
+	}
+
+	/**
+	 * Output the "Buying as a company?" checkbox and the conditional
+	 * company fields after the standard WooCommerce billing form.
+	 *
+	 * @param \WC_Checkout $checkout WooCommerce checkout object.
+	 */
+	public function add_checkout_fields( $checkout ) {
+		?>
+		<div id="invoice-dividi-company-toggle-wrap">
+			<p class="form-row form-row-wide">
+				<label class="woocommerce-form__label woocommerce-form__label-for-checkbox checkbox">
+					<input
+						type="checkbox"
+						id="invoice_dividi_is_company"
+						name="invoice_dividi_is_company"
+						value="1"
+						class="woocommerce-form__input woocommerce-form__input-checkbox input-checkbox"
+					/>
+					<span><?php esc_html_e( 'Buying as a company?', 'invoice-dividi' ); ?></span>
+				</label>
+			</p>
+		</div>
+
+		<div id="invoice-dividi-company-fields" style="display:none;">
+			<?php
+			woocommerce_form_field(
+				'invoice_dividi_company_name',
+				array(
+					'type'        => 'text',
+					'label'       => __( 'Company Name', 'invoice-dividi' ),
+					'placeholder' => __( 'Enter company name', 'invoice-dividi' ),
+					'required'    => false,
+					'class'       => array( 'form-row-wide' ),
+				),
+				$checkout->get_value( 'invoice_dividi_company_name' )
+			);
+
+			woocommerce_form_field(
+				'invoice_dividi_vat_code',
+				array(
+					'type'        => 'text',
+					'label'       => __( 'VAT Code', 'invoice-dividi' ),
+					'placeholder' => __( 'Enter VAT code', 'invoice-dividi' ),
+					'required'    => false,
+					'class'       => array( 'form-row-wide' ),
+				),
+				$checkout->get_value( 'invoice_dividi_vat_code' )
+			);
+
+			woocommerce_form_field(
+				'invoice_dividi_reg_code',
+				array(
+					'type'        => 'text',
+					'label'       => __( 'Company Registration Code', 'invoice-dividi' ),
+					'placeholder' => __( 'Enter company registration code', 'invoice-dividi' ),
+					'required'    => false,
+					'class'       => array( 'form-row-wide' ),
+				),
+				$checkout->get_value( 'invoice_dividi_reg_code' )
+			);
+			?>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Validate the company purchase fields when the checkbox is checked.
+	 */
+	public function validate_checkout_fields() {
+		if ( $this->is_company_purchase_from_post() ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing
+			$company_name = isset( $_POST['invoice_dividi_company_name'] ) ? sanitize_text_field( wp_unslash( $_POST['invoice_dividi_company_name'] ) ) : '';
+
+			if ( '' === $company_name ) {
+				wc_add_notice( __( 'Please enter your Company Name.', 'invoice-dividi' ), 'error' );
+			}
+		}
+	}
+
+	/**
+	 * Save the company purchase fields to order meta.
+	 *
+	 * @param int $order_id WooCommerce order ID.
+	 */
+	public function save_checkout_fields( $order_id ) {
+		$order = wc_get_order( $order_id );
+		if ( ! $order ) {
+			return;
+		}
+
+		$is_company = $this->is_company_purchase_from_post();
+
+		$order->update_meta_data( Invoice_Dividi_Invoice::META_IS_COMPANY, $is_company ? '1' : '0' );
+
+		if ( $is_company ) {
+			// phpcs:disable WordPress.Security.NonceVerification.Missing
+			$company_name = isset( $_POST['invoice_dividi_company_name'] ) ? sanitize_text_field( wp_unslash( $_POST['invoice_dividi_company_name'] ) ) : '';
+			$vat_code     = isset( $_POST['invoice_dividi_vat_code'] ) ? sanitize_text_field( wp_unslash( $_POST['invoice_dividi_vat_code'] ) ) : '';
+			$reg_code     = isset( $_POST['invoice_dividi_reg_code'] ) ? sanitize_text_field( wp_unslash( $_POST['invoice_dividi_reg_code'] ) ) : '';
+			// phpcs:enable WordPress.Security.NonceVerification.Missing
+
+			$order->update_meta_data( Invoice_Dividi_Invoice::META_CUSTOMER_COMPANY_NAME, $company_name );
+			$order->update_meta_data( Invoice_Dividi_Invoice::META_CUSTOMER_VAT_CODE, $vat_code );
+			$order->update_meta_data( Invoice_Dividi_Invoice::META_CUSTOMER_REG_CODE, $reg_code );
+		}
+
+		$order->save();
+	}
+
+	/**
+	 * Check whether the current checkout POST indicates a company purchase.
+	 *
+	 * @return bool
+	 */
+	private function is_company_purchase_from_post() {
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		return isset( $_POST['invoice_dividi_is_company'] ) && '1' === sanitize_text_field( wp_unslash( $_POST['invoice_dividi_is_company'] ) );
 	}
 
 	// ----------------------------------------------------------------
