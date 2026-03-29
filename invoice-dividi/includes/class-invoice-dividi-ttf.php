@@ -144,7 +144,7 @@ class Invoice_Dividi_TTF {
 		$ids   = $this->utf8_to_glyph_ids( $utf8 );
 		$total = 0;
 		foreach ( $ids as $id ) {
-			$total += isset( $this->widths[ $id ] ) ? $this->widths[ $id ] : $this->last_adv_width;
+			$total += $this->widths[ $id ] ?? $this->last_adv_width;
 		}
 		return ( $this->units_per_em > 0 )
 			? $total * $font_size / $this->units_per_em
