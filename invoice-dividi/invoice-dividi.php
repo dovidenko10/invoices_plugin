@@ -103,6 +103,7 @@ function invoice_dividi_deactivate() {
 // -----------------------------------------------------------------
 // Load classes
 // -----------------------------------------------------------------
+require_once INVOICE_DIVIDI_DIR . 'includes/class-invoice-dividi-ttf.php';
 require_once INVOICE_DIVIDI_DIR . 'includes/class-invoice-dividi-pdf.php';
 require_once INVOICE_DIVIDI_DIR . 'includes/class-invoice-dividi-invoice.php';
 require_once INVOICE_DIVIDI_DIR . 'includes/class-invoice-dividi-admin.php';
