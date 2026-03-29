@@ -112,6 +112,13 @@ require_once INVOICE_DIVIDI_DIR . 'includes/class-invoice-dividi-wc.php';
  * Boot the plugin once all plugins have loaded.
  */
 function invoice_dividi_init() {
+	// Load plugin translations.
+	load_plugin_textdomain(
+		'invoice-dividi',
+		false,
+		dirname( plugin_basename( INVOICE_DIVIDI_FILE ) ) . '/languages'
+	);
+
 	// Check that WooCommerce is active.
 	if ( ! class_exists( 'WooCommerce' ) ) {
 		add_action( 'admin_notices', 'invoice_dividi_woocommerce_missing_notice' );

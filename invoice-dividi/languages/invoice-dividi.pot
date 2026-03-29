@@ -1,0 +1,289 @@
+# Copyright (C) 2024 Dividi
+# This file is distributed under the same license as the Invoice Dividi plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: Invoice Dividi 1.0.0\n"
+"Report-Msgid-Bugs-To: https://dividi.lt\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2024-01-01T00:00:00+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: Invoice Dividi\n"
+"X-Domain: invoice-dividi\n"
+
+#. Plugin Name of the plugin
+msgid "Invoice Dividi"
+msgstr ""
+
+#. Plugin URI of the plugin
+msgid "https://dividi.lt"
+msgstr ""
+
+#. Description of the plugin
+msgid "Professional WooCommerce PDF invoice generation plugin. Generates invoices directly from WooCommerce orders with full VAT/PVM support and customisable company details."
+msgstr ""
+
+#. Author of the plugin
+msgid "Dividi"
+msgstr ""
+
+#: invoice-dividi.php
+msgid "Invoice Dividi requires WooCommerce to be installed and active."
+msgstr ""
+
+#: includes/class-invoice-dividi-admin.php
+msgid "Invoice Dividi – Settings"
+msgstr ""
+
+#: includes/class-invoice-dividi-admin.php
+msgid "Company Information"
+msgstr ""
+
+#: includes/class-invoice-dividi-admin.php
+msgid "Company Name"
+msgstr ""
+
+#: includes/class-invoice-dividi-admin.php
+msgid "Company Address"
+msgstr ""
+
+#: includes/class-invoice-dividi-admin.php
+msgid "Company Details (bank, reg. no., etc.)"
+msgstr ""
+
+#: includes/class-invoice-dividi-admin.php
+msgid "VAT / PVM Code"
+msgstr ""
+
+#: includes/class-invoice-dividi-admin.php
+msgid "Company Logo"
+msgstr ""
+
+#: includes/class-invoice-dividi-admin.php
+msgid "VAT / PVM Settings"
+msgstr ""
+
+#: includes/class-invoice-dividi-admin.php
+msgid "Enable VAT / PVM"
+msgstr ""
+
+#: includes/class-invoice-dividi-admin.php
+msgid "VAT Percentage (%)"
+msgstr ""
+
+#: includes/class-invoice-dividi-admin.php
+msgid "Invoice Numbering"
+msgstr ""
+
+#: includes/class-invoice-dividi-admin.php
+msgid "Available placeholders: {YEAR}, {MONTH}, {NUMBER}"
+msgstr ""
+
+#: includes/class-invoice-dividi-admin.php
+msgid "Number Format"
+msgstr ""
+
+#: includes/class-invoice-dividi-admin.php
+msgid "Next Invoice Number"
+msgstr ""
+
+#: includes/class-invoice-dividi-admin.php
+msgid "Number Zero-Padding (digits)"
+msgstr ""
+
+#: includes/class-invoice-dividi-admin.php
+msgid "Invoice PDF"
+msgstr ""
+
+#: includes/class-invoice-dividi-admin.php
+msgid "Invoice Footer Text"
+msgstr ""
+
+#: includes/class-invoice-dividi-admin.php
+msgid "Save Settings"
+msgstr ""
+
+#: includes/class-invoice-dividi-admin.php
+msgid "Logo preview"
+msgstr ""
+
+#: includes/class-invoice-dividi-admin.php
+msgid "Upload / Select Logo"
+msgstr ""
+
+#: includes/class-invoice-dividi-admin.php
+msgid "Remove Logo"
+msgstr ""
+
+#: includes/class-invoice-dividi-admin.php
+msgid "You do not have permission to access this page."
+msgstr ""
+
+#: includes/class-invoice-dividi-admin.php
+msgid "Invoice Dividi © Dividi (dividi.lt). This plugin may not be used, distributed, or modified without the express written permission of Dividi."
+msgstr ""
+
+#: includes/class-invoice-dividi-wc.php
+msgid "Buying as a company?"
+msgstr ""
+
+#: includes/class-invoice-dividi-wc.php
+msgid "Enter company name"
+msgstr ""
+
+#: includes/class-invoice-dividi-wc.php
+msgid "Enter VAT code"
+msgstr ""
+
+#: includes/class-invoice-dividi-wc.php
+msgid "Company Registration Code"
+msgstr ""
+
+#: includes/class-invoice-dividi-wc.php
+msgid "Enter company registration code"
+msgstr ""
+
+#: includes/class-invoice-dividi-wc.php
+msgid "Please enter your Company Name."
+msgstr ""
+
+#: includes/class-invoice-dividi-wc.php
+msgid "Invoice Dividi"
+msgstr ""
+
+#: includes/class-invoice-dividi-wc.php
+msgid "Invoice No.:"
+msgstr ""
+
+#: includes/class-invoice-dividi-wc.php
+msgid "Date:"
+msgstr ""
+
+#: includes/class-invoice-dividi-wc.php
+msgid "View Invoice"
+msgstr ""
+
+#: includes/class-invoice-dividi-wc.php
+msgid "Regenerate Invoice"
+msgstr ""
+
+#: includes/class-invoice-dividi-wc.php
+msgid "Generate Invoice"
+msgstr ""
+
+#: includes/class-invoice-dividi-wc.php
+msgid "No invoice has been generated for this order yet."
+msgstr ""
+
+#: includes/class-invoice-dividi-wc.php
+msgid "Permission denied."
+msgstr ""
+
+#: includes/class-invoice-dividi-wc.php
+msgid "Invalid order ID."
+msgstr ""
+
+#: includes/class-invoice-dividi-wc.php
+msgid "Security check failed."
+msgstr ""
+
+#. translators: %s: invoice number
+#: includes/class-invoice-dividi-wc.php
+msgid "Invoice Dividi: Invoice %s generated successfully."
+msgstr ""
+
+#. translators: %s: invoice number
+#: includes/class-invoice-dividi-wc.php
+msgid "Invoice %s generated successfully."
+msgstr ""
+
+#: includes/class-invoice-dividi-wc.php
+msgid "Invalid order."
+msgstr ""
+
+#: includes/class-invoice-dividi-wc.php
+msgid "Invoice not found."
+msgstr ""
+
+#: includes/class-invoice-dividi-wc.php
+msgid "Invoice file not found on disk."
+msgstr ""
+
+#: includes/class-invoice-dividi-wc.php
+msgid "Invalid file path."
+msgstr ""
+
+#: includes/class-invoice-dividi-wc.php
+msgid "Invoice"
+msgstr ""
+
+#: includes/class-invoice-dividi-invoice.php
+msgid "Invalid WooCommerce order."
+msgstr ""
+
+#: includes/class-invoice-dividi-invoice.php
+msgid "Could not create the invoice directory. Please check directory permissions."
+msgstr ""
+
+#: includes/class-invoice-dividi-invoice.php
+msgid "Could not write PDF file to disk. Please check directory permissions."
+msgstr ""
+
+#: includes/class-invoice-dividi-pdf.php
+msgid "VAT Code: "
+msgstr ""
+
+#: includes/class-invoice-dividi-pdf.php
+msgid "INVOICE"
+msgstr ""
+
+#: includes/class-invoice-dividi-pdf.php
+msgid "Invoice No.: "
+msgstr ""
+
+#: includes/class-invoice-dividi-pdf.php
+msgid "Date: "
+msgstr ""
+
+#: includes/class-invoice-dividi-pdf.php
+msgid "Order: "
+msgstr ""
+
+#: includes/class-invoice-dividi-pdf.php
+msgid "Bill To"
+msgstr ""
+
+#: includes/class-invoice-dividi-pdf.php
+msgid "Reg. Code: "
+msgstr ""
+
+#: includes/class-invoice-dividi-pdf.php
+msgid "Product"
+msgstr ""
+
+#: includes/class-invoice-dividi-pdf.php
+msgid "Qty"
+msgstr ""
+
+#: includes/class-invoice-dividi-pdf.php
+msgid "Unit Price"
+msgstr ""
+
+#: includes/class-invoice-dividi-pdf.php
+msgid "Total"
+msgstr ""
+
+#: includes/class-invoice-dividi-pdf.php
+msgid "Subtotal"
+msgstr ""
+
+#: includes/class-invoice-dividi-pdf.php
+msgid "VAT / PVM"
+msgstr ""
+
+#: includes/class-invoice-dividi-pdf.php
+msgid "TOTAL"
+msgstr ""
