@@ -300,8 +300,11 @@ class Invoice_Dividi_Invoice {
 		$upload_dir = wp_upload_dir();
 		$pdf_dir    = trailingslashit( $upload_dir['basedir'] ) . 'invoice-dividi';
 
-		if ( ! file_exists( $pdf_dir ) ) {
-			wp_mkdir_p( $pdf_dir );
+		if ( ! file_exists( $pdf_dir ) && ! wp_mkdir_p( $pdf_dir ) ) {
+			return new WP_Error(
+				'pdf_dir_failed',
+				__( 'Could not create the invoice directory. Please check directory permissions.', 'invoice-dividi' )
+			);
 		}
 
 		// Sanitise the invoice number to be safe for file names.

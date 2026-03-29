@@ -316,7 +316,11 @@ class Invoice_Dividi_WC {
 			wp_die( esc_html__( 'Security check failed.', 'invoice-dividi' ) );
 		}
 
-		$result = Invoice_Dividi_Invoice::create( $order_id );
+		try {
+			$result = Invoice_Dividi_Invoice::create( $order_id );
+		} catch ( \Throwable $e ) {
+			$result = new WP_Error( 'pdf_exception', $e->getMessage() );
+		}
 
 		$order = wc_get_order( $order_id );
 
