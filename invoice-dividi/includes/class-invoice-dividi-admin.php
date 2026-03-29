@@ -164,7 +164,6 @@ class Invoice_Dividi_Admin {
 			'number_format',
 			'number_counter',
 			'number_padding',
-			'footer_text',
 		);
 
 		foreach ( $text_fields as $field ) {
@@ -185,6 +184,7 @@ class Invoice_Dividi_Admin {
 			)
 		);
 
+		// footer_text is a WYSIWYG field and must allow HTML; use wp_kses_post.
 		register_setting(
 			self::OPTION_GROUP,
 			'invoice_dividi_footer_text',

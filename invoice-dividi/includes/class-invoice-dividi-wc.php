@@ -213,6 +213,12 @@ class Invoice_Dividi_WC {
 	/**
 	 * Render the metabox HTML.
 	 *
+	 * Uses direct admin-post URLs (GET + nonce) instead of nested <form> elements.
+	 * WooCommerce order-edit pages already wrap all metabox content in an outer
+	 * <form>; nesting another <form> inside it is invalid HTML5 and browsers
+	 * silently discard the inner form, submitting the outer WooCommerce form
+	 * instead.  A plain anchor link avoids this entirely.
+	 *
 	 * @param \WP_Post|\WC_Order $post_or_order WP_Post (classic) or WC_Order (HPOS).
 	 */
 	public function render_metabox( $post_or_order ) {
@@ -224,12 +230,22 @@ class Invoice_Dividi_WC {
 			return;
 		}
 
-		$order_id   = $order->get_id();
+		$order_id    = $order->get_id();
 		$has_invoice = Invoice_Dividi_Invoice::exists( $order_id );
-		$invoice    = $has_invoice ? Invoice_Dividi_Invoice::get( $order_id ) : null;
+		$invoice     = $has_invoice ? Invoice_Dividi_Invoice::get( $order_id ) : null;
 
-		// Nonce for the generate action.
-		$nonce = wp_create_nonce( 'invoice_dividi_generate_' . $order_id );
+		// Build a nonce-protected URL for the generate / regenerate action.
+		$generate_url = wp_nonce_url(
+			add_query_arg(
+				array(
+					'action'   => 'invoice_dividi_generate',
+					'order_id' => $order_id,
+				),
+				admin_url( 'admin-post.php' )
+			),
+			'invoice_dividi_generate_' . $order_id,
+			'invoice_dividi_nonce'
+		);
 		?>
 		<div class="invoice-dividi-metabox">
 			<?php if ( $has_invoice && $invoice ) : ?>
@@ -257,26 +273,22 @@ class Invoice_Dividi_WC {
 					<br /><br />
 				<?php endif; ?>
 
-				<!-- Regenerate form -->
-				<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
-					<input type="hidden" name="action"   value="invoice_dividi_generate" />
-					<input type="hidden" name="order_id" value="<?php echo absint( $order_id ); ?>" />
-					<?php wp_nonce_field( 'invoice_dividi_generate_' . $order_id, 'invoice_dividi_nonce' ); ?>
-					<button type="submit" class="button invoice-dividi-regen-btn">
-						<?php esc_html_e( 'Regenerate Invoice', 'invoice-dividi' ); ?>
-					</button>
-				</form>
+				<!-- Regenerate link (no nested form) -->
+				<a
+					href="<?php echo esc_url( $generate_url ); ?>"
+					class="button invoice-dividi-regen-btn"
+				>
+					<?php esc_html_e( 'Regenerate Invoice', 'invoice-dividi' ); ?>
+				</a>
 
 			<?php else : ?>
-				<!-- Generate invoice form -->
-				<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
-					<input type="hidden" name="action"   value="invoice_dividi_generate" />
-					<input type="hidden" name="order_id" value="<?php echo absint( $order_id ); ?>" />
-					<?php wp_nonce_field( 'invoice_dividi_generate_' . $order_id, 'invoice_dividi_nonce' ); ?>
-					<button type="submit" class="button button-primary invoice-dividi-generate-btn">
-						<?php esc_html_e( 'Generate Invoice', 'invoice-dividi' ); ?>
-					</button>
-				</form>
+				<!-- Generate invoice link (no nested form) -->
+				<a
+					href="<?php echo esc_url( $generate_url ); ?>"
+					class="button button-primary invoice-dividi-generate-btn"
+				>
+					<?php esc_html_e( 'Generate Invoice', 'invoice-dividi' ); ?>
+				</a>
 				<p class="description">
 					<?php esc_html_e( 'No invoice has been generated for this order yet.', 'invoice-dividi' ); ?>
 				</p>
@@ -290,10 +302,12 @@ class Invoice_Dividi_WC {
 	// ----------------------------------------------------------------
 
 	/**
-	 * Handle the admin POST for invoice generation.
+	 * Handle the admin-post action for invoice generation.
 	 *
-	 * Verifies the nonce, generates the invoice, adds an order note,
-	 * then redirects back to the order page with a result notice.
+	 * Accepts both GET and POST requests (the metabox renders a plain anchor
+	 * link that issues a GET request so that the button does not sit inside
+	 * the WooCommerce order-edit outer <form>).  Verifies the nonce, generates
+	 * the invoice, adds an order note, then redirects back to the order page.
 	 */
 	public function handle_generate() {
 		// Verify capability.
@@ -301,15 +315,17 @@ class Invoice_Dividi_WC {
 			wp_die( esc_html__( 'Permission denied.', 'invoice-dividi' ) );
 		}
 
-		$order_id = isset( $_POST['order_id'] ) ? absint( wp_unslash( $_POST['order_id'] ) ) : 0;
+		// Accept order_id from GET or POST (anchor link sends GET).
+		// Nonce verification happens immediately below; absint() sanitises the value.
+		$order_id = isset( $_REQUEST['order_id'] ) ? absint( wp_unslash( $_REQUEST['order_id'] ) ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if ( ! $order_id ) {
 			wp_die( esc_html__( 'Invalid order ID.', 'invoice-dividi' ) );
 		}
 
-		// Verify nonce.
-		if ( ! isset( $_POST['invoice_dividi_nonce'] ) ||
+		// Verify nonce (present in the URL query string for GET requests).
+		if ( ! isset( $_REQUEST['invoice_dividi_nonce'] ) ||
 			! wp_verify_nonce(
-				sanitize_text_field( wp_unslash( $_POST['invoice_dividi_nonce'] ) ),
+				sanitize_text_field( wp_unslash( $_REQUEST['invoice_dividi_nonce'] ) ),
 				'invoice_dividi_generate_' . $order_id
 			)
 		) {
